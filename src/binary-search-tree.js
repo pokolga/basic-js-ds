@@ -16,7 +16,8 @@ class BinarySearchTree {
   }
 
   add( data ) {
-	  if (this.has(data)) return;
+	if (this.has(data)) return;
+	
 	const obj =  new Node();
 	obj.data = data;
 	obj.left = null;
@@ -75,14 +76,48 @@ class BinarySearchTree {
   }
 
   remove( data ) {
-    if (this.has(data)) {
-		
-		
-	}
+    if (!this.has(data)) return;
+	this._root = delete_recursively(this._root, data)
+	
+	
+	  function delete_recursively(v, data){
+		if (v === null){
+			return null;
+		}
+		if (data < v.data){
+			v.left = delete_recursively(v.left, data);
+			return v;
+		}	
+		else if (data > v.data){
+			v.right = delete_recursively(v.right, data);
+			return v
+		}	
+		// v.data == data
+		if (v.left === null){
+			return v.right;
+		}
+		else if (v.right  === null){
+			return v.left;
+		}	
+		else{
+			// есть оба поддерева
+			let min_key = (find_min(v.right)).data;
+			v.data = min_key;
+			v.right = delete_recursively(v.right, min_key);
+			return v;
+		}
+	  }
+	  
+	  function find_min(v){
+		if (v.left !== null){
+			return find_min(v.left);
+		}	
+		else return v;
+	  }
   }
-
+  
   min() {
-    let current = this._root;
+	let current = this._root; 
 	let output = this._root;
 	while (current){
 		output = current;
@@ -92,8 +127,8 @@ class BinarySearchTree {
   }
 
   max() {
-    let current = this._root;
-	let output = this._root;
+	let current = this._root;  
+    let output = this._root;  
 	while (current){
 		output = current;
 		current = current.right;
